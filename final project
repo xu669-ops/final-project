@@ -1,0 +1,72 @@
+
+        all_balance = old_balance + money               #Total balance after income
+        new_bill = [now_time, money, 0, all_balance, content]       #new bill
+        records.append(new_bill)
+        with open(fname,'wb') as fobj:
+            pickle.dump(records, fobj)
+#        save_bill(records)
+#        print(bill)
+        color.cecho(34, 'Operation is successful')
+
+#Record expenditure
+def cost(fname):
+    now_time = strftime('%Y-%m-%d')  # The current time
+    with open(fname, 'rb') as fobj:
+        records = pickle.load(fobj)
+    old_balance = int(records[-1][-2])  # Last balance
+    try:
+        money = int(input('expenses(RMB): '))
+        content = input('Expense description: ')
+    except ValueError as e:
+        print('\033[31m输入错误:\033[0m', e)
+    else:
+        all_balance = old_balance - money  # The total balance after income
+        new_bill = [now_time, 0, money, all_balance, content]  # new bill
+        records.append(new_bill)
+        with open(fname, 'wb') as fobj:
+            pickle.dump(records, fobj)
+        #        save_bill(records)
+        #        print(bill)
+        color.cecho(34, 'Operation is successful')
+
+#Check the bill
+def query(fname):
+    #Print the header
+    print('%-12s%-8s%-8s%-12s%-15s' % ('date', 'save', 'cost', 'balance', 'comment'))
+    with open(fname, 'rb') as fobj:
+        records = pickle.load(fobj)
+        for i in records:
+            print('%-12s%-8s%-8s%-12s%-15s'  % tuple(i))
+
+#Function application
+def show_menu():
+    cmds = {'0':save, '1':cost, '2':query}
+    prompt = '''(0)income
+(1)expenses
+(2)examine
+(3)sign out
+输入(0/1/2/3):'''
+    # Initializing bill
+    bill = [['2020-12-31', 0, 0, 10000, 'init']]
+    fname = '/tmp/record.data'  # File to store bills
+    if not os.path.exists(fname):
+        with open(fname, 'wb') as f:
+            pickle.dump(bill, f)
+
+    while True:
+        choice = input(prompt).strip()
+        if choice not in '0123':
+            print('Incorrect input. Please try again')
+            continue
+        if choice == '3':
+            color.cecho(36, 'money is not an inherent part of the human being')
+            break
+        cmds[choice](fname)
+        print('-' * 40)
+
+#####################################主程序#####################################
+if __name__ == '__main__':
+    try:
+        show_menu()
+    except (ValueError, KeyboardInterrupt, EOFError,FileNotFoundError) as e:
+        print('\033[31m输入有误:\033[0m', e)
