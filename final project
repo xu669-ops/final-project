@@ -18,7 +18,7 @@ def cost(fname):
         money = int(input('expenses(RMB): '))
         content = input('Expense description: ')
     except ValueError as e:
-        print('\033[31m输入错误:\033[0m', e)
+        print('\033[31mInput errors:\033[0m', e)
     else:
         all_balance = old_balance - money  # The total balance after income
         new_bill = [now_time, 0, money, all_balance, content]  # new bill
@@ -64,9 +64,9 @@ def show_menu():
         cmds[choice](fname)
         print('-' * 40)
 
-#####################################主程序#####################################
+##################################### The main program #####################################
 if __name__ == '__main__':
     try:
         show_menu()
     except (ValueError, KeyboardInterrupt, EOFError,FileNotFoundError) as e:
-        print('\033[31m输入有误:\033[0m', e)
+        print('\033[31mInput errors:\033[0m', e)
